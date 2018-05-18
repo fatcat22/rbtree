@@ -2168,31 +2168,27 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
 }
 
 void test_rbtree_remove_left_red_fullnode__substitued_by_red(void** state) {
-  /*                10B
+  /*                 8B
                  /       \
-               5R        11B
+               4R        9B
            /       \       \
-         3B         8B     12B
+         2B         6B     10R
         /  \      /  \
-      1R   4B    7R   9B
-       \       /
-       2B     6B
+      1R   3R    5R   7R
   */
   const _node_info_t node_infos[] = {
-    {_create_tnode(1), -1, 2, 3, true},
-    {_create_tnode(2), -1, -1, 1, false},
-    {_create_tnode(3), 1, 4, 5, false},
-    {_create_tnode(4), -1, -1, 3, false},
-    {_create_tnode(5), 3, 8, 10, true},
-    {_create_tnode(6), -1, -1, 7, false},
-    {_create_tnode(7), 6, -1, 8, true},
-    {_create_tnode(8), 7, 9, 5, false},
-    {_create_tnode(9), -1, -1, 8, false},
-    {_create_tnode(10), 5, 11, -1, false},
-    {_create_tnode(11), -1, 12, 10, false},
-    {_create_tnode(12), -1, -1, 11, false},
+    {_create_tnode(1), -1, -1, 2, true},
+    {_create_tnode(2), 1, 3, 4, false},
+    {_create_tnode(3), -1, -1, 2, true},
+    {_create_tnode(4), 2, 6, 8, true},
+    {_create_tnode(5), -1, -1, 6, true},
+    {_create_tnode(6), 5, 7, 4, false},
+    {_create_tnode(7), -1, -1, 6, true},
+    {_create_tnode(8), 4, 9, -1, false},
+    {_create_tnode(9), -1, 10, 8, false},
+    {_create_tnode(10), -1, -1, 9, true},
   };
-  const int rm_nodes[] = {5};
+  const int rm_nodes[] = {4};
 
   _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
 }
@@ -2228,32 +2224,28 @@ void test_rbtree_remove_left_red_fullnode__substitued_by_black(void** state) {
 }
 
 void test_rbtree_remove_left_black_fullnode__substitued_by_red(void** state) {
-  /*                10B
+  /*                 8B
                  /       \
-               5B        11B
+               4B         9B
            /       \       \
-         3B         8B     13B
+         2B         6B     11B
         /  \      /  \     /
-      1R   4B    7R   9B  12B
-       \       /
-       2B     6B
+      1R   3R    5R   7R  10R
   */
   const _node_info_t node_infos[] = {
-    {_create_tnode(1), -1, 2, 3, true},
-    {_create_tnode(2), -1, -1, 1, false},
-    {_create_tnode(3), 1, 4, 5, false},
-    {_create_tnode(4), -1, -1, 3, false},
-    {_create_tnode(5), 3, 8, 10, false},
-    {_create_tnode(6), -1, -1, 7, false},
-    {_create_tnode(7), 6, -1, 8, true},
-    {_create_tnode(8), 7, 9, 5, false},
-    {_create_tnode(9), -1, -1, 8, false},
-    {_create_tnode(10), 5, 11, -1, false},
-    {_create_tnode(11), -1, 13, 10, false},
-    {_create_tnode(12), -1, -1, 13, false},
-    {_create_tnode(13), 12, -1, 11, false},
+    {_create_tnode(1), -1, -1, 2, true},
+    {_create_tnode(2), 1, 3, 4, false},
+    {_create_tnode(3), -1, -1, 2, true},
+    {_create_tnode(4), 2, 6, 8, false},
+    {_create_tnode(5), -1, -1, 6, true},
+    {_create_tnode(6), 5, 7, 4, false},
+    {_create_tnode(7), -1, -1, 6, true},
+    {_create_tnode(8), 4, 9, -1, false},
+    {_create_tnode(9), -1, 11, 8, false},
+    {_create_tnode(10), -1, -1, 11, true},
+    {_create_tnode(11), 10, -1, 9, false},
   };
-  const int rm_nodes[] = {5};
+  const int rm_nodes[] = {4};
 
   _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
 }
@@ -2306,7 +2298,7 @@ void test_rbtree_remove_right_red_fullnode__substitued_by_red(void** state) {
     {_create_tnode(4), -1, -1, 6, false},
     {_create_tnode(6), 4, 7, 8, true},
     {_create_tnode(7), -1, -1, 6, false},
-    {_create_tnode(8), 6, 11, 3, true},
+    {_create_tnode(8), 6, 11, 3, false},
     {_create_tnode(9), -1, 10, 11, false},
     {_create_tnode(10), -1, -1, 9, true},
     {_create_tnode(11), 9, 13, 8, true},
@@ -2323,11 +2315,11 @@ void test_rbtree_remove_right_red_fullnode__substitued_by_black(void** state) {
                   /           \
                 3B            10R
                /          /       \
-              2B         7B        13B
-             /        /  \       /   \
+              2B        7B        13B
+             /        /   \      /   \
             1B       5B   8B    11B   15B
-                     \     \     \    /
-                     6B    9B   12B  14B
+                      \    \     \    /
+                      6B   9B   12B  14B
   */
   const _node_info_t node_infos[] = {
     {_create_tnode(1), -1, -1, 2, false},
@@ -2395,9 +2387,7 @@ void test_rbtree_remove_right_black_fullnode__substitued_by_black(void** state) 
              /         /  \       /   \
             1B       5B   8B    12B   14B
                                /       \
-                              10R       15B
-                               \
-                               11B
+                              10B       15B
   */
   const _node_info_t node_infos[] = {
     {_create_tnode(1), -1, -1, 2, false},
@@ -2406,10 +2396,9 @@ void test_rbtree_remove_right_black_fullnode__substitued_by_black(void** state) 
     {_create_tnode(4), 3, 9, -1, false},
     {_create_tnode(5), -1, -1, 6, false},
     {_create_tnode(6), 5, 8, 9, false},
-    {_create_tnode(8), -1, -1, 6, true},
+    {_create_tnode(8), -1, -1, 6, false},
     {_create_tnode(9), 6, 13, 4, false},
-    {_create_tnode(10), -1, 11, 12, true},
-    {_create_tnode(11), -1, -1, 10, false},
+    {_create_tnode(10), -1, -1, 12, false},
     {_create_tnode(12), 10, -1, 13, false},
     {_create_tnode(13), 12, 14, 9, true},
     {_create_tnode(14), -1, 15, 13, false},
@@ -2434,7 +2423,6 @@ void test_rbtree_remove_root__without_child(void** state) {
 
   assert_true(_empty_tree(tree));
 
-  *state = NULL;
   destroy_rbtree(tree);
 }
 
@@ -2469,18 +2457,18 @@ void test_rbtree_remove_root__has_only_right_child__substitued_by_red(void** sta
 void test_rbtree_remove_root__has_all_childs__substitued_by_red(void** state) {
   /*                        4B
                          /    \
-                       2B     6R
+                       2B     6B
                       / \    / \
-                    1R  3R  5B  7B
+                    1R  3R  5R  7R
   */
   const _node_info_t node_infos[] = {
     {_create_tnode(1), -1, -1, 2, true},
     {_create_tnode(2), 1, 3, 4, false},
     {_create_tnode(3), -1, -1, 2, true},
     {_create_tnode(4), 2, 6, -1, false},
-    {_create_tnode(5), -1, -1, 6, false},
-    {_create_tnode(6), 5, 7, 4, true},
-    {_create_tnode(7), -1, -1, 6, false},
+    {_create_tnode(5), -1, -1, 6, true},
+    {_create_tnode(6), 5, 7, 4, false},
+    {_create_tnode(7), -1, -1, 6, true},
   };
   const int rm_nodes[] = {4};
 
