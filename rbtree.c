@@ -379,7 +379,7 @@ rbnode_t* __find_a_substitutes_node(rbtree_t* tree, rbnode_t* node) {
   }
 }
 
-void __substitutes_node(rbtree_t* tree, rbnode_t* node, rbnode_t* sub_node) {
+void __substitutes_node_but_color(rbtree_t* tree, rbnode_t* node, rbnode_t* sub_node) {
   rbnode_t* parent = _parent(node);
   rbnode_t* left = _left_child(node);
   rbnode_t* right = _right_child(node);
@@ -406,6 +406,13 @@ void __substitutes_node(rbtree_t* tree, rbnode_t* node, rbnode_t* sub_node) {
 
   if (_is_root(tree, node)) {
     _set_root(tree, sub_node);
+  }
+
+  if (_is_red(node)) {
+      _set_red(sub_node);
+  }
+  else {
+      _set_black(sub_node);
   }
 }
 
@@ -434,26 +441,130 @@ void __pickoff_nonfull_node(rbtree_t* tree, rbnode_t* node) {
   }
 }
 
+void _keep_rbtree_rule_for_remove(rbtree_t* tree, rbnode_t* start_node, rbnode_t* start_child, const bool remove_is_red) {
+    rbnode_t *node, *child;
+    rbnode_t *another_child, *left_grandchild, *right_grandchild;
+
+    if (NULL == start_node) {
+        return;
+    }
+    assert(start_child == _left_child(start_node) || start_child == _right_child(start_node));
+
+    if (remove_is_red) {
+        return;
+    }
+    if (_is_red(start_child)) {
+        _set_black(start_child);
+        return;
+    }
+
+    node = start_node;
+    child = start_child;
+    while(NULL != node) {
+        another_child = child == _left_child(node) ? _right_child(node) : _left_child(node);
+
+        if (NULL == another_child) {
+            if (_is_red(node)) {
+                _set_black(node);
+                break;
+            }
+            else {
+                child = node;
+                node = _parent(node);
+                continue;
+            }
+        }
+        left_grandchild = _left_child(another_child);
+        right_grandchild = _right_child(another_child);
+
+        //node has left and right child from now on.
+
+        if (_is_black(node) &&
+            _is_black(another_child) &&
+            _is_black(left_grandchild) &&
+            _is_black(right_grandchild))
+        {
+            _set_red(another_child);
+            child = node;
+            node = _parent(node);
+            continue;
+        }
+
+        if (_is_red(node) &&
+            _is_black(another_child) &&
+            _is_black(left_grandchild) &&
+            _is_black(right_grandchild))
+        {
+            _flips_color(node, another_child);
+            break;
+        }
+
+        if (_is_red(another_child))
+        {
+            if (_is_left_child(another_child)) {
+                _rotate_right(tree, node);
+            }
+            else {
+                _rotate_left(tree, node);
+            }
+            continue;
+        }
+
+        if (_is_left_child(another_child) && _is_red(left_grandchild)) {
+            _rotate_right(tree, node);
+            _set_black(left_grandchild);
+            break;
+        }
+        if (_is_right_child(another_child) && _is_red(right_grandchild)) {
+            _rotate_left(tree, node);
+            _set_black(right_grandchild);
+            break;
+        }
+
+        if (_is_left_child(another_child) && _is_red(right_grandchild)) {
+            _rotate_left(tree, another_child);
+            continue;
+        }
+        if (_is_right_child(another_child) && _is_red(left_grandchild)) {
+            _rotate_right(tree, another_child);
+            continue;
+        }
+
+        assert(!"all situation are handled, never reach here");
+    }
+
+}
+
 bool _pickoff_node(rbtree_t* tree, rbnode_t* node) {
-  rbnode_t* sub_node;
+  rbnode_t *sub_node;
+  rbnode_t *parent, *child;
+  bool is_red;
 
   assert(NULL != tree);
   assert(NULL != node);
   assert(!_empty_tree(tree));
 
   if (_is_leaf(node)) {
-    __pickoff_nonfull_node(tree, node);
+      parent = _parent(node);
+      is_red = _is_red(node);
+      __pickoff_nonfull_node(tree, node);
+      _keep_rbtree_rule_for_remove(tree, parent, NULL, is_red);
     return true;
   }
 
   sub_node = __find_a_substitutes_node(tree, node);
-  /*node is not a leaf. so sub_node must not be NULL.*/
+  /*node is not a leaf. so exch_node must not be NULL.*/
   assert(NULL != sub_node);
   /*a substitutes node has 1 child at most.*/
   assert(_child_count(sub_node) < 2);
 
+  parent = _parent(sub_node);
+  child = _left_child(sub_node) ? _left_child(sub_node) : _right_child(sub_node);
+  is_red = _is_red(sub_node);
   __pickoff_nonfull_node(tree, sub_node);
-  __substitutes_node(tree, node, sub_node);
+  __substitutes_node_but_color(tree, node, sub_node);
+
+  _keep_rbtree_rule_for_remove(tree, parent, child, is_red);
 
   return true;
 }
@@ -468,14 +579,16 @@ bool _free_node(rbtree_t* tree, rbnode_t* node) {
 }
 
 bool _free_entire_tree(rbtree_t* tree) {
-  const rbnode_t* node;
+  rbnode_t* node;
   void* handle = rbt_begin_enumeration(tree);
   if (NULL == handle) {
     return false;
   }
 
   while((node = rbt_next_node(handle)) != NULL) {
-    _free_node(tree, (rbnode_t*)node);
+      assert(NULL == _left_child(node) || NULL == _right_child(node));
+      __pickoff_nonfull_node(tree, node);
+      tree->rb_free(node);
   }
 
   rbt_end_enumeration(handle);
@@ -483,7 +596,7 @@ bool _free_entire_tree(rbtree_t* tree) {
   return true;
 }
 
-void _keep_rbtree_rule(rbtree_t* tree, rbnode_t* start_node) {
+void _keep_rbtree_rule_for_insert(rbtree_t* tree, rbnode_t* start_node) {
   rbnode_t* node = start_node;
 
   while(true) {
@@ -555,7 +668,7 @@ bool rbt_insert(rbtree_t* tree, rbnode_t* new_node) {
     return false;
   }
 
-  _keep_rbtree_rule(tree, new_node);
+  _keep_rbtree_rule_for_insert(tree, new_node);
   return true;
 }
 
@@ -614,9 +727,9 @@ void* rbt_begin_enumeration(rbtree_t* tree) {
   return rbt_enum;
 }
 
-const rbnode_t* rbt_next_node(void* enum_arg) {
+rbnode_t* rbt_next_node(void* enum_arg) {
   struct _rbtree_enum_t* rbt_enum = (struct _rbtree_enum_t*)enum_arg;
-  const rbnode_t* result = rbt_enum->current;
+  rbnode_t* result = rbt_enum->current;
 
   if (NULL == result) {
     return NULL;

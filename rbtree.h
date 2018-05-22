@@ -41,7 +41,7 @@ bool rbt_remove(struct rbtree_t* root, rbnode_t* node);
 /*remove safely when enumearte the tree.*/
 
 void* rbt_begin_enumeration(struct rbtree_t* root);
-const rbnode_t* rbt_next_node(void*);
+rbnode_t* rbt_next_node(void*);
 void rbt_end_enumeration(void*);
 
 /*a inner loop enumeration which wrap up rbt_begin_enumeration/rbt_end_enumeration

@@ -311,9 +311,9 @@ void test_rbtree_remove_left_black_leaf__case33(void** state) {
   */
   const _node_info_t node_infos[] = {
     {_create_tnode(1), -1, -1, 2, false},
-    {_create_tnode(2), -1, 4, 6, false},
-    {_create_tnode(3), -1, -1, 4, true},
-    {_create_tnode(4), 3, 5, 2, false},
+    {_create_tnode(2), 1, 4, 6, false},
+    {_create_tnode(3), -1, -1, 4, false},
+    {_create_tnode(4), 3, 5, 2, true},
     {_create_tnode(5), -1, -1, 4, false},
     {_create_tnode(6), 2, 7, -1, false},
     {_create_tnode(7), -1, 8, 6, false},
@@ -561,7 +561,7 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
     {_create_tnode(9), 8, 10, -1, false},
     {_create_tnode(10), -1, 11, 9, false},
     {_create_tnode(11), -1, 12, 10, false},
-    {_create_tnode(12), -1, -1, 12, false},
+    {_create_tnode(12), -1, -1, 11, false},
   };
   const int rm_num = 8;
   //const int sub_num = 7;

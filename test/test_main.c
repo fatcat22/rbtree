@@ -115,11 +115,6 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(test_rbtree_root_rotate_right, setup_rotate_test_tree, teardown_rotate_test_tree),
         unit_test(test_rbtree_ascending_insert),
         unit_test(test_rbtree_descending_insert),
-        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_first, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
-        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_last, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
-        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_root, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
-        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_two_leaf, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
-        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_three_fullnode, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
         unit_test(test_rbtree_remove_left_red_leaf),
         unit_test(test_rbtree_remove_left_black_leaf__case31),
         unit_test(test_rbtree_remove_left_black_leaf__case32),
@@ -199,9 +194,12 @@ int main(int argc, char* argv[]) {
         unit_test(test_rbtree_remove_root__has_only_right_child__substitued_by_red),
         unit_test(test_rbtree_remove_root__has_all_childs__substitued_by_red),
         unit_test(test_rbtree_remove_root__has_all_childs__substitued_by_black),
+        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_first, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
+        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_last, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
+        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_root, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
+        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_two_leaf, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
+        unit_test_setup_teardown(test_rbtree_enumeration_safe_del_three_fullnode, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
     };
-    //const UnitTest tests[] = {
-     // unit_test(test_rbtree_remove_left_red_leaf),
-    //};
+
     return run_tests(tests);
 }
