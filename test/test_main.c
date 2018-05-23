@@ -104,6 +104,8 @@ void test_rbtree_enumeration_safe_del_root(void** state);
 void test_rbtree_enumeration_safe_del_two_leaf(void** state);
 void test_rbtree_enumeration_safe_del_three_fullnode(void** state);
 
+void test_rbtree_find(void** state);
+
 int main(int argc, char* argv[]) {
     const UnitTest tests[] = {
         unit_test(test_rbtree_create_assert),
@@ -115,6 +117,7 @@ int main(int argc, char* argv[]) {
         unit_test_setup_teardown(test_rbtree_root_rotate_right, setup_rotate_test_tree, teardown_rotate_test_tree),
         unit_test(test_rbtree_ascending_insert),
         unit_test(test_rbtree_descending_insert),
+        unit_test(test_rbtree_find),
         unit_test(test_rbtree_remove_left_red_leaf),
         unit_test(test_rbtree_remove_left_black_leaf__case31),
         unit_test(test_rbtree_remove_left_black_leaf__case32),

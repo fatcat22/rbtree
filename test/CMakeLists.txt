@@ -24,6 +24,7 @@ set(SOURCE_FILES
 	test_insert.c
 	test_enumeration.c
 	test_rotating.c
+	test_find.c
 	test_main.c
 	../rbtree.c
 )
