@@ -17,11 +17,11 @@
 #define RBFLAG_COLOR_RED (1 << 0)
 
 typedef struct rbtree_t {
-    rbnode_alloc_t rb_alloc;
-    rbnode_free_t rb_free;
-    rbnode_compare_t node_cmp;
-    rbvalue_compare_t value_cmp;
-    rbnode_t* root;
+  rbnode_alloc_t rb_alloc;
+  rbnode_free_t rb_free;
+  rbnode_compare_t node_cmp;
+  rbvalue_compare_t value_cmp;
+  rbnode_t* root;
 }rbtree_t;
 
 rbnode_t* _root(rbtree_t* tree) {
@@ -444,97 +444,96 @@ void __pickoff_nonfull_node(rbtree_t* tree, rbnode_t* node) {
 }
 
 void _keep_rbtree_rule_for_remove(rbtree_t* tree, rbnode_t* start_node, rbnode_t* start_child, const bool remove_is_red) {
-    rbnode_t *node, *child;
-    rbnode_t *another_child, *left_grandchild, *right_grandchild;
+  rbnode_t *node, *child;
+  rbnode_t *another_child, *left_grandchild, *right_grandchild;
 
-    if (NULL == start_node) {
-        return;
+  if (NULL == start_node) {
+    return;
+  }
+  assert(start_child == _left_child(start_node) || start_child == _right_child(start_node));
+
+  if (remove_is_red) {
+    return;
+  }
+  if (_is_red(start_child)) {
+    _set_black(start_child);
+    return;
+  }
+
+  node = start_node;
+  child = start_child;
+  while(NULL != node) {
+    another_child = child == _left_child(node) ? _right_child(node) : _left_child(node);
+
+    if (NULL == another_child) {
+      if (_is_red(node)) {
+        _set_black(node);
+        break;
+      }
+      else {
+        child = node;
+        node = _parent(node);
+        continue;
+      }
     }
-    assert(start_child == _left_child(start_node) || start_child == _right_child(start_node));
+    left_grandchild = _left_child(another_child);
+    right_grandchild = _right_child(another_child);
 
-    if (remove_is_red) {
-        return;
-    }
-    if (_is_red(start_child)) {
-        _set_black(start_child);
-        return;
-    }
+    //node has left and right child from now on.
 
-    node = start_node;
-    child = start_child;
-    while(NULL != node) {
-        another_child = child == _left_child(node) ? _right_child(node) : _left_child(node);
-
-        if (NULL == another_child) {
-            if (_is_red(node)) {
-                _set_black(node);
-                break;
-            }
-            else {
-                child = node;
-                node = _parent(node);
-                continue;
-            }
-        }
-        left_grandchild = _left_child(another_child);
-        right_grandchild = _right_child(another_child);
-
-        //node has left and right child from now on.
-
-        if (_is_black(node) &&
-            _is_black(another_child) &&
-            _is_black(left_grandchild) &&
-            _is_black(right_grandchild))
-        {
-            _set_red(another_child);
-            child = node;
-            node = _parent(node);
-            continue;
-        }
-
-        if (_is_red(node) &&
-            _is_black(another_child) &&
-            _is_black(left_grandchild) &&
-            _is_black(right_grandchild))
-        {
-            _flips_color(node, another_child);
-            break;
-        }
-
-        if (_is_red(another_child))
-        {
-            if (_is_left_child(another_child)) {
-                _rotate_right(tree, node);
-            }
-            else {
-                _rotate_left(tree, node);
-            }
-            continue;
-        }
-
-        if (_is_left_child(another_child) && _is_red(left_grandchild)) {
-            _rotate_right(tree, node);
-            _set_black(left_grandchild);
-            break;
-        }
-        if (_is_right_child(another_child) && _is_red(right_grandchild)) {
-            _rotate_left(tree, node);
-            _set_black(right_grandchild);
-            break;
-        }
-
-        if (_is_left_child(another_child) && _is_red(right_grandchild)) {
-            _rotate_left(tree, another_child);
-            continue;
-        }
-        if (_is_right_child(another_child) && _is_red(left_grandchild)) {
-            _rotate_right(tree, another_child);
-            continue;
-        }
-
-        assert(!"all situation are handled, never reach here");
+    if (_is_black(node) &&
+      _is_black(another_child) &&
+      _is_black(left_grandchild) &&
+      _is_black(right_grandchild))
+    {
+      _set_red(another_child);
+      child = node;
+      node = _parent(node);
+      continue;
     }
 
+    if (_is_red(node) &&
+      _is_black(another_child) &&
+      _is_black(left_grandchild) &&
+      _is_black(right_grandchild))
+    {
+      _flips_color(node, another_child);
+      break;
+    }
+
+    if (_is_red(another_child))
+    {
+      if (_is_left_child(another_child)) {
+        _rotate_right(tree, node);
+      }
+      else {
+        _rotate_left(tree, node);
+      }
+      continue;
+    }
+
+    if (_is_left_child(another_child) && _is_red(left_grandchild)) {
+      _rotate_right(tree, node);
+      _set_black(left_grandchild);
+      break;
+    }
+    if (_is_right_child(another_child) && _is_red(right_grandchild)) {
+      _rotate_left(tree, node);
+      _set_black(right_grandchild);
+      break;
+    }
+
+    if (_is_left_child(another_child) && _is_red(right_grandchild)) {
+      _rotate_left(tree, another_child);
+      continue;
+    }
+    if (_is_right_child(another_child) && _is_red(left_grandchild)) {
+      _rotate_right(tree, another_child);
+      continue;
+    }
+
+    assert(!"all situation are handled, never reach here");
+  }
 }
 
 bool _pickoff_node(rbtree_t* tree, rbnode_t* node) {
@@ -547,10 +546,10 @@ bool _pickoff_node(rbtree_t* tree, rbnode_t* node) {
   assert(!_empty_tree(tree));
 
   if (_is_leaf(node)) {
-      parent = _parent(node);
-      is_red = _is_red(node);
-      __pickoff_nonfull_node(tree, node);
-      _keep_rbtree_rule_for_remove(tree, parent, NULL, is_red);
+    parent = _parent(node);
+    is_red = _is_red(node);
+    __pickoff_nonfull_node(tree, node);
+    _keep_rbtree_rule_for_remove(tree, parent, NULL, is_red);
     return true;
   }
 
@@ -588,9 +587,9 @@ bool _free_entire_tree(rbtree_t* tree) {
   }
 
   while((node = rbt_next_node(handle)) != NULL) {
-      assert(NULL == _left_child(node) || NULL == _right_child(node));
-      __pickoff_nonfull_node(tree, node);
-      tree->rb_free(node);
+    assert(NULL == _left_child(node) || NULL == _right_child(node));
+    __pickoff_nonfull_node(tree, node);
+    tree->rb_free(node);
   }
 
   rbt_end_enumeration(handle);
@@ -643,21 +642,21 @@ void _keep_rbtree_rule_for_insert(rbtree_t* tree, rbnode_t* start_node) {
 }
 
 rbtree_t* create_rbtree(rbnode_alloc_t rb_alloc, rbnode_free_t rb_free, rbnode_compare_t node_cmp, rbvalue_compare_t value_cmp) {
-    assert(NULL != rb_alloc);
-    assert(NULL != rb_free);
-    assert(NULL != node_cmp);
-    assert(NULL != value_cmp);
+  assert(NULL != rb_alloc);
+  assert(NULL != rb_free);
+  assert(NULL != node_cmp);
+  assert(NULL != value_cmp);
 
-    rbtree_t* tree = calloc(1, sizeof(rbtree_t));
-    if (NULL == tree) {
-        return NULL;
-    }
+  rbtree_t* tree = calloc(1, sizeof(rbtree_t));
+  if (NULL == tree) {
+    return NULL;
+  }
 
-    tree->rb_alloc = rb_alloc;
-    tree->rb_free = rb_free;
-    tree->node_cmp = node_cmp;
-    tree->value_cmp = value_cmp;
-    return tree;
+  tree->rb_alloc = rb_alloc;
+  tree->rb_free = rb_free;
+  tree->node_cmp = node_cmp;
+  tree->value_cmp = value_cmp;
+  return tree;
 }
 
 void destroy_rbtree(rbtree_t* tree) {
@@ -668,10 +667,10 @@ void destroy_rbtree(rbtree_t* tree) {
 }
 
 bool rbt_insert(rbtree_t* tree, void* val) {
-    rbnode_t* new_node = tree->rb_alloc(val);
-    if (NULL == new_node) {
-        return false;
-    }
+  rbnode_t* new_node = tree->rb_alloc(val);
+  if (NULL == new_node) {
+    return false;
+  }
   _set_red(new_node);
 
   if (true != _insert_node(tree, new_node)) {
@@ -689,7 +688,7 @@ bool rbt_remove2(rbtree_t* tree, rbnode_t* node) {
   }
 
   if (NULL == node) {
-      return false;
+    return false;
   }
   if (true != _free_node(tree, node)) {
     return false;
@@ -788,21 +787,21 @@ bool rbt_foreach_safe(rbtree_t* tree, bool (*accessor)(const rbnode_t* node, voi
 }
 
 rbnode_t* rbt_find(struct rbtree_t* tree, void* val) {
-    rbnode_t* node = _root(tree);
+  rbnode_t* node = _root(tree);
 
-    while(NULL != node) {
-        const int res = tree->value_cmp(val, node);
-        if (res < 0) {
-            node = _left_child(node);
-        }
-        else if (res == 0) {
-            break;
-        }
-        else {
-            assert(res > 0);
-            node = _right_child(node);
-        }
+  while(NULL != node) {
+    const int res = tree->value_cmp(val, node);
+    if (res < 0) {
+      node = _left_child(node);
     }
+    else if (res == 0) {
+      break;
+    }
+    else {
+      assert(res > 0);
+      node = _right_child(node);
+    }
+  }
 
-    return node;
+  return node;
 }

@@ -39,13 +39,13 @@ int _tnode_compare(const rbnode_t* n1, const rbnode_t* n2) {
 int _tvalue_compare(void* val, const rbnode_t* node) {
   const struct tnode_t* tnode = container_of(node, struct tnode_t, node);
   if ((int)val > tnode->num) {
-      return 1;
+    return 1;
   }
   else if ((int)val == tnode->num) {
-      return 0;
+    return 0;
   }
   else {
-      return -1;
+    return -1;
   }
 }
 
