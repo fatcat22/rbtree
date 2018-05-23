@@ -211,7 +211,7 @@ _assert_orderliness(struct rbtree_t* tree) {
 }
 
 static
-void _test_rbtree_remove(const _node_info_t* node_infos, const int node_infos_cnt, const int* rm_nodes, const int rm_nodes_cnt) {
+void _test_rbtree_remove(const _node_info_t* node_infos, const int node_infos_cnt, const int* rm_nodes, const int rm_nodes_cnt, const int black_cnt_after_remove) {
   int i;
   _tnode_array_t remaining;
   _tnode_array_t expect_remaining = _make_expect_remaining(node_infos, node_infos_cnt, rm_nodes, rm_nodes_cnt);
@@ -225,8 +225,7 @@ void _test_rbtree_remove(const _node_info_t* node_infos, const int node_infos_cn
 
   _assert_remaining(&expect_remaining, &remaining);
   _assert_orderliness(test_tree);
-  //TODO: set black count
-  _assert_rbtree_rule(test_tree, -1);
+  _assert_rbtree_rule(test_tree, black_cnt_after_remove);
 
   if (remaining.nodes) {
     free(remaining.nodes);
@@ -253,8 +252,9 @@ void test_rbtree_remove_left_red_leaf(void** state) {
     {_create_tnode(6), 5, -1, 4, true},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_leaf__case31(void** state) {
@@ -276,8 +276,9 @@ void test_rbtree_remove_left_black_leaf__case31(void** state) {
     {_create_tnode(7), -1, -1, 6, false},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_leaf__case32(void** state) {
@@ -296,8 +297,9 @@ void test_rbtree_remove_left_black_leaf__case32(void** state) {
     {_create_tnode(6), -1, -1, 5, false},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_leaf__case33(void** state) {
@@ -320,8 +322,9 @@ void test_rbtree_remove_left_black_leaf__case33(void** state) {
     {_create_tnode(8), -1, -1, 7, false},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_leaf__case34(void** state) {
@@ -343,8 +346,9 @@ void test_rbtree_remove_left_black_leaf__case34(void** state) {
     {_create_tnode(7), -1, -1, 6, false},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_leaf(void** state) {
@@ -363,8 +367,9 @@ void test_rbtree_remove_right_red_leaf(void** state) {
     {_create_tnode(6), 5, -1, 4, true},
   };
   const int rm_nodes[] = {3};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_leaf__case31(void** state) {
@@ -386,8 +391,9 @@ void test_rbtree_remove_right_black_leaf__case31(void** state) {
     {_create_tnode(7), -1, -1, 6, false},
   };
   const int rm_nodes[] = {7};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_leaf__case32(void** state) {
@@ -406,8 +412,9 @@ void test_rbtree_remove_right_black_leaf__case32(void** state) {
     {_create_tnode(6), -1, -1, 5, false},
   };
   const int rm_nodes[] = {6};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_leaf__case33(void** state) {
@@ -430,8 +437,9 @@ void test_rbtree_remove_right_black_leaf__case33(void** state) {
     {_create_tnode(9), -1, -1, 8, false},
   };
   const int rm_nodes[] = {9};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_leaf__case34(void** state) {
@@ -454,8 +462,9 @@ void test_rbtree_remove_right_black_leaf__case34(void** state) {
     {_create_tnode(9), -1, -1, 8, false},
   };
   const int rm_nodes[] = {9};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_red__case1(void** state) {
@@ -478,8 +487,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_red__c
   const int rm_num = 4;
   //const int sub_num = 3;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case2(void** state) {
@@ -501,8 +511,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 4;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case31(void** state) {
@@ -532,8 +543,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 7;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case32(void** state) {
@@ -566,8 +578,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case33(void** state) {
@@ -578,16 +591,16 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
           4B          10B
         /    \         \
        2R    6B        11B
-      / \    /
-    1B  3B  5R
+      / \
+    1B  3B
   */
   const _node_info_t node_infos[] = {
     {_create_tnode(1), -1, -1, 2, false},
     {_create_tnode(2), 1, 3, 4, true},
     {_create_tnode(3), -1, -1, 2, false},
     {_create_tnode(4), 2, 6, 7, false},
-    {_create_tnode(5), -1, -1, 6, true},
-    {_create_tnode(6), 5, -1, 4, false},
+    //{_create_tnode(5), -1, -1, 6, true},
+    {_create_tnode(6), -1, -1, 4, false},
     {_create_tnode(7), 4, -1, 8, true},
     {_create_tnode(8), 7, 9, -1, false},
     {_create_tnode(9), -1, 10, 8, true},
@@ -597,8 +610,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 7;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case34(void** state) {
@@ -631,8 +645,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black__case35(void** state) {
@@ -665,8 +680,9 @@ void test_rbtree_remove_left_red_node__has_only_left_child__substitued_by_black_
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_red__case1(void** state) {
@@ -689,8 +705,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_red__
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case2(void** state) {
@@ -712,8 +729,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 3;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case31(void** state) {
@@ -746,8 +764,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case32(void** state) {
@@ -782,8 +801,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case33(void** state) {
@@ -811,8 +831,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case34(void** state) {
@@ -845,8 +866,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black__case35(void** state) {
@@ -879,8 +901,9 @@ void test_rbtree_remove_left_red_node__has_only_right_child__substitued_by_black
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_red__case1(void** state) {
@@ -903,8 +926,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_red__
   const int rm_num = 6;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case2(void** state) {
@@ -932,8 +956,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 9;
   //const int sub_num = 8;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case31(void** state) {
@@ -964,8 +989,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case32(void** state) {
@@ -1002,8 +1028,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 16;
   //const int sub_num = 15;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case33(void** state) {
@@ -1032,8 +1059,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 10;
   //const int sub_num = 9;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case34(void** state) {
@@ -1067,8 +1095,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 13;
   //const int sub_num = 12;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black__case35(void** state) {
@@ -1101,8 +1130,9 @@ void test_rbtree_remove_right_red_node__has_only_left_child__substitued_by_black
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_red_case1(void** state) {
@@ -1126,8 +1156,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_red_
   const int rm_num = 4;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case2(void** state) {
@@ -1150,8 +1181,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 4;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case31(void** state) {
@@ -1181,8 +1213,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case32(void** state) {
@@ -1215,8 +1248,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case33(void** state) {
@@ -1245,8 +1279,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case34(void** state) {
@@ -1275,8 +1310,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_black__case35(void** state) {
@@ -1309,8 +1345,9 @@ void test_rbtree_remove_right_red_node__has_only_right_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_red__case1(void** state) {
@@ -1334,8 +1371,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_red_
   const int rm_num = 4;
   //const int sub_num = 3;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case2(void** state) {
@@ -1362,8 +1400,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 5;
   //const int sub_num = 4;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case31(void** state) {
@@ -1394,8 +1433,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 7;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case32(void** state) {
@@ -1425,8 +1465,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 7;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case33(void** state) {
@@ -1455,8 +1496,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 6;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case34(void** state) {
@@ -1490,8 +1532,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_black__case35(void** state) {
@@ -1525,8 +1568,9 @@ void test_rbtree_remove_left_black_node__has_only_left_child__substitued_by_blac
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_red__case1(void** state) {
@@ -1550,8 +1594,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_red
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case2(void** state) {
@@ -1578,8 +1623,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case31(void** state) {
@@ -1610,8 +1656,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case32(void** state) {
@@ -1641,8 +1688,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case33(void** state) {
@@ -1671,8 +1719,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case34(void** state) {
@@ -1701,8 +1750,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_black__case35(void** state) {
@@ -1736,8 +1786,9 @@ void test_rbtree_remove_left_black_node__has_only_right_child__substitued_by_bla
   const int rm_num = 1;
   //const int sub_num = 2;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_red__case1(void** state) {
@@ -1761,8 +1812,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_red
   const int rm_num = 7;
   //const int sub_num = 6;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case2(void** state) {
@@ -1789,8 +1841,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 8;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case31(void** state) {
@@ -1821,8 +1874,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case32(void** state) {
@@ -1852,8 +1906,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case33(void** state) {
@@ -1882,8 +1937,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case34(void** state) {
@@ -1912,8 +1968,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 12;
   //const int sub_num = 11;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_black__case35(void** state) {
@@ -1947,8 +2004,9 @@ void test_rbtree_remove_right_black_node__has_only_left_child__substitued_by_bla
   const int rm_num = 13;
   //const int sub_num = 12;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_red__case1(void** state) {
@@ -1972,8 +2030,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_re
   const int rm_num = 4;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case2(void** state) {
@@ -2000,8 +2059,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 4;
   //const int sub_num = 5;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case31(void** state) {
@@ -2032,8 +2092,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 6;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case32(void** state) {
@@ -2063,8 +2124,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 6;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case33(void** state) {
@@ -2093,8 +2155,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 6;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case34(void** state) {
@@ -2128,8 +2191,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 6;
   //const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_black__case35(void** state) {
@@ -2163,8 +2227,9 @@ void test_rbtree_remove_right_black_node__has_only_right_child__substitued_by_bl
   const int rm_num = 6;
   ////const int sub_num = 7;
   const int rm_nodes[] = {rm_num};
+  const int black_cnt_after_remove = 5;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_fullnode__substitued_by_red(void** state) {
@@ -2189,8 +2254,9 @@ void test_rbtree_remove_left_red_fullnode__substitued_by_red(void** state) {
     {_create_tnode(10), -1, -1, 9, true},
   };
   const int rm_nodes[] = {4};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_red_fullnode__substitued_by_black(void** state) {
@@ -2219,8 +2285,9 @@ void test_rbtree_remove_left_red_fullnode__substitued_by_black(void** state) {
     {_create_tnode(12), -1, -1, 11, false},
   };
   const int rm_nodes[] = {5};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_fullnode__substitued_by_red(void** state) {
@@ -2246,8 +2313,9 @@ void test_rbtree_remove_left_black_fullnode__substitued_by_red(void** state) {
     {_create_tnode(11), 10, -1, 9, false},
   };
   const int rm_nodes[] = {4};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_left_black_fullnode__substitued_by_black(void** state) {
@@ -2276,8 +2344,9 @@ void test_rbtree_remove_left_black_fullnode__substitued_by_black(void** state) {
     {_create_tnode(13), 12, -1, 11, false},
   };
   const int rm_nodes[] = {5};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_fullnode__substitued_by_red(void** state) {
@@ -2306,8 +2375,9 @@ void test_rbtree_remove_right_red_fullnode__substitued_by_red(void** state) {
     {_create_tnode(13), 12, -1, 11, false},
   };
   const int rm_nodes[] = {11};
+  const int black_cnt_after_remove = 3;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_red_fullnode__substitued_by_black(void** state) {
@@ -2339,8 +2409,9 @@ void test_rbtree_remove_right_red_fullnode__substitued_by_black(void** state) {
     {_create_tnode(15), 14, -1, 13, false},
   };
   const int rm_nodes[] = {10};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_fullnode__substitued_by_red(void** state) {
@@ -2374,8 +2445,9 @@ void test_rbtree_remove_right_black_fullnode__substitued_by_red(void** state) {
     {_create_tnode(15), -1, -1, 14, false},
   };
   const int rm_nodes[] = {9};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_right_black_fullnode__substitued_by_black(void** state) {
@@ -2405,8 +2477,9 @@ void test_rbtree_remove_right_black_fullnode__substitued_by_black(void** state) 
     {_create_tnode(15), -1, -1, 14, false},
   };
   const int rm_nodes[] = {9};
+  const int black_cnt_after_remove = 4;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_root__without_child(void** state) {
@@ -2435,8 +2508,9 @@ void test_rbtree_remove_root__has_only_left_child__substitued_by_red(void** stat
     {_create_tnode(2), 1, -1, -1, false},
   };
   const int rm_nodes[] = {2};
+  const int black_cnt_after_remove = 1;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_root__has_only_right_child__substitued_by_red(void** state) {
@@ -2449,8 +2523,9 @@ void test_rbtree_remove_root__has_only_right_child__substitued_by_red(void** sta
     {_create_tnode(2), -1, -1, 1, true},
   };
   const int rm_nodes[] = {1};
+  const int black_cnt_after_remove = 1;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_root__has_all_childs__substitued_by_red(void** state) {
@@ -2470,8 +2545,9 @@ void test_rbtree_remove_root__has_all_childs__substitued_by_red(void** state) {
     {_create_tnode(7), -1, -1, 6, true},
   };
   const int rm_nodes[] = {4};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
 
 void test_rbtree_remove_root__has_all_childs__substitued_by_black(void** state) {
@@ -2491,6 +2567,7 @@ void test_rbtree_remove_root__has_all_childs__substitued_by_black(void** state) 
     {_create_tnode(7), -1, -1, 6, false},
   };
   const int rm_nodes[] = {4};
+  const int black_cnt_after_remove = 2;
 
-  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
+  _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes), black_cnt_after_remove);
 }
