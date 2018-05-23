@@ -21,8 +21,10 @@ typedef struct rbnode_t {
   int _flags;
 }rbnode_t;
 
-typedef int (*rbnode_compare_t)(const rbnode_t* node1, const rbnode_t* node2);
+typedef rbnode_t* (*rbnode_alloc_t)(void* val);
 typedef void (*rbnode_free_t)(rbnode_t* node);
+typedef int (*rbnode_compare_t)(const rbnode_t* node1, const rbnode_t* node2);
+typedef int (*rbvalue_compare_t)(void* val, const rbnode_t* node);
 
 #ifndef container_of
 #define container_of(ptr, type, member) ({ \
@@ -31,16 +33,18 @@ typedef void (*rbnode_free_t)(rbnode_t* node);
 #endif /*container_of*/
 
 
-struct rbtree_t* create_rbtree(rbnode_compare_t compare, rbnode_free_t rb_free);
-void destroy_rbtree(struct rbtree_t* root);
+struct rbtree_t* create_rbtree(rbnode_alloc_t rb_alloc, rbnode_free_t rb_free, rbnode_compare_t node_cmp, rbvalue_compare_t value_cmp);
+void destroy_rbtree(struct rbtree_t* tree);
 
-//unsigned int rbt_size(struct rbtree_t* root);
-bool rbt_insert(struct rbtree_t* root, rbnode_t* node);
+bool rbt_insert(struct rbtree_t* tree, void* val);
+//bool rbt_insert(struct rbtree_t* root, rbnode_t* node);
+
 /*remove and free a node*/
-bool rbt_remove(struct rbtree_t* root, rbnode_t* node);
+bool rbt_remove(struct rbtree_t* tree, void* val);
+bool rbt_remove2(struct rbtree_t* root, rbnode_t* node);
 /*remove safely when enumearte the tree.*/
 
-void* rbt_begin_enumeration(struct rbtree_t* root);
+void* rbt_begin_enumeration(struct rbtree_t* tree);
 rbnode_t* rbt_next_node(void*);
 void rbt_end_enumeration(void*);
 
@@ -48,7 +52,8 @@ void rbt_end_enumeration(void*);
   accessor return false if you want stop enumeration.
 */
 bool rbt_foreach_safe(struct rbtree_t* root, bool (*accessor)(const rbnode_t* node, void* arg), void* arg);
-//bool rbt_find(struct rbtree_t*, rbnode_compare_t compare);
+
+rbnode_t* rbt_find(struct rbtree_t* tree, void* val);
 
 
 

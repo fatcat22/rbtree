@@ -1,26 +1,6 @@
 #include "_test_common.h"
 #include "string.h"
 
-static void
-_assert_values_equal(const LargestIntegralType* tnodes, const int tnodes_cnt, const int* values, const int values_cnt) {
-  int i;
-
-  assert_int_equal(tnodes_cnt, values_cnt);
-  for (i = 0; i < tnodes_cnt; i++) {
-    const int num = ((tnode_t*)(uintptr_t)tnodes[i])->num;
-    assert_true(_is_in_set(num, values, values_cnt));
-  }
-}
-
-static void
-_assert_sorted(const int* values, const int values_cnt) {
-  int i;
-
-  for (i = 0; i < values_cnt - 1; ++i) {
-    assert_true(values[i] < values[i+1]);
-  }
-}
-
 typedef struct _enum_test_t {
   int* sorted_values;
   size_t sorted_values_cnt;
@@ -37,41 +17,36 @@ void setup_enumerate_test_rbtree(void** state) {
                     /   /\
                   1    4  6
   */
-  const LargestIntegralType tnodes[] = {
-    (LargestIntegralType)(uintptr_t)_create_tnode(7),
-    (LargestIntegralType)(uintptr_t)_create_tnode(3),
-    (LargestIntegralType)(uintptr_t)_create_tnode(9),
-    (LargestIntegralType)(uintptr_t)_create_tnode(2),
-    (LargestIntegralType)(uintptr_t)_create_tnode(5),
-    //(LargestIntegralType)(uintptr_t)_create_tnode(8),
-    (LargestIntegralType)(uintptr_t)_create_tnode(10),
-    (LargestIntegralType)(uintptr_t)_create_tnode(1),
-    (LargestIntegralType)(uintptr_t)_create_tnode(4),
-    (LargestIntegralType)(uintptr_t)_create_tnode(6),
-    //(LargestIntegralType)(uintptr_t)_create_tnode(11),
+  const LargestIntegralType node_nums[] = {
+    7,
+    3,
+    9,
+    2,
+    5,
+    //8,
+    10,
+    1,
+    4,
+    6,
+    //11,
   };
-  const int nodes_cnt = sizeof(tnodes)/sizeof(tnodes[0]);
   const int sorted_values[] = {1, 2, 3, 4, 5, 6, 7, 9, 10};
-  const int sorted_values_cnt = sizeof(sorted_values)/sizeof(sorted_values[0]);
   _enum_test_t* enum_test;
   int i;
-
-  _assert_values_equal(tnodes, nodes_cnt, sorted_values, sorted_values_cnt);
-  _assert_sorted(sorted_values, sorted_values_cnt);
 
   enum_test = calloc(1, sizeof(*enum_test));
   assert_true(NULL != enum_test);
 
-  enum_test->test_tree = create_rbtree(_tnode_compare, _free_tnode);
+  enum_test->test_tree = create_rbtree(_alloc_tnode, _free_tnode, _tnode_compare, _tvalue_compare);
   assert_true(NULL != enum_test->test_tree);
-  for (i = 0; i < nodes_cnt; i++) {
-    assert_true(rbt_insert(enum_test->test_tree, &(((struct tnode_t*)(uintptr_t)tnodes[i])->node)));
+  for (i = 0; i < countof(node_nums); i++) {
+    assert_true(rbt_insert(enum_test->test_tree, (void*)(int)node_nums[i]));
   }
 
   enum_test->sorted_values = calloc(1, sizeof(sorted_values));
   assert_true(NULL != enum_test->sorted_values);
   memcpy(enum_test->sorted_values, sorted_values, sizeof(sorted_values));
-  enum_test->sorted_values_cnt = sorted_values_cnt;
+  enum_test->sorted_values_cnt = countof(sorted_values);
 
   *state = enum_test;
 }
@@ -107,7 +82,7 @@ void _test_enumeration_del(_enum_test_t* enum_test, const int* rm_nums, const si
     assert_int_equal(enum_test->sorted_values[i], tnode->num);
 
     if (_is_in_set(tnode->num, rm_nums, rm_nums_cnt)) {
-      rbt_remove(enum_test->test_tree, (rbnode_t*)node);
+      rbt_remove(enum_test->test_tree, (void*)tnode->num);
     }
   }
   assert_int_equal(enum_test->sorted_values_cnt, i);

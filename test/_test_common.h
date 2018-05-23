@@ -41,8 +41,10 @@ typedef struct tnode_t
 }tnode_t;
 
 struct tnode_t* _create_tnode(int num);
+rbnode_t* _alloc_tnode(void* val);
 void _free_tnode(rbnode_t* node);
 int _tnode_compare(const rbnode_t* n1, const rbnode_t* n2);
+int _tvalue_compare(void* val, const rbnode_t* node);
 bool _is_in_set(const int val, const int* sets, const size_t sets_cnt);
 
 /*

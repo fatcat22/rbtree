@@ -17,9 +17,11 @@
 #define RBFLAG_COLOR_RED (1 << 0)
 
 typedef struct rbtree_t {
-  rbnode_compare_t compare;
-  rbnode_free_t rb_free;
-  rbnode_t* root;
+    rbnode_alloc_t rb_alloc;
+    rbnode_free_t rb_free;
+    rbnode_compare_t node_cmp;
+    rbvalue_compare_t value_cmp;
+    rbnode_t* root;
 }rbtree_t;
 
 rbnode_t* _root(rbtree_t* tree) {
@@ -341,7 +343,7 @@ bool _insert_node(rbtree_t* tree, rbnode_t* new_node) {
     if (NULL == node)
       break;
 
-    cmp = tree->compare(new_node, node);
+    cmp = tree->node_cmp(new_node, node);
     if (cmp < 0) {
       insert_pos = _ref_left_child(node);
     }
@@ -640,18 +642,22 @@ void _keep_rbtree_rule_for_insert(rbtree_t* tree, rbnode_t* start_node) {
   }
 }
 
-rbtree_t* create_rbtree(rbnode_compare_t compare, rbnode_free_t rb_free) {
-  assert(NULL != compare);
-  assert(NULL != rb_free);
+rbtree_t* create_rbtree(rbnode_alloc_t rb_alloc, rbnode_free_t rb_free, rbnode_compare_t node_cmp, rbvalue_compare_t value_cmp) {
+    assert(NULL != rb_alloc);
+    assert(NULL != rb_free);
+    assert(NULL != node_cmp);
+    assert(NULL != value_cmp);
 
-  rbtree_t* tree = calloc(1, sizeof(rbtree_t));
-  if (NULL == tree) {
-    return NULL;
-  }
+    rbtree_t* tree = calloc(1, sizeof(rbtree_t));
+    if (NULL == tree) {
+        return NULL;
+    }
 
-  tree->compare = compare;
-  tree->rb_free = rb_free;
-  return tree;
+    tree->rb_alloc = rb_alloc;
+    tree->rb_free = rb_free;
+    tree->node_cmp = node_cmp;
+    tree->value_cmp = value_cmp;
+    return tree;
 }
 
 void destroy_rbtree(rbtree_t* tree) {
@@ -661,7 +667,11 @@ void destroy_rbtree(rbtree_t* tree) {
   free(tree);
 }
 
-bool rbt_insert(rbtree_t* tree, rbnode_t* new_node) {
+bool rbt_insert(rbtree_t* tree, void* val) {
+    rbnode_t* new_node = tree->rb_alloc(val);
+    if (NULL == new_node) {
+        return false;
+    }
   _set_red(new_node);
 
   if (true != _insert_node(tree, new_node)) {
@@ -672,18 +682,29 @@ bool rbt_insert(rbtree_t* tree, rbnode_t* new_node) {
   return true;
 }
 
-bool rbt_remove(rbtree_t* tree, rbnode_t* node) {
+bool rbt_remove2(rbtree_t* tree, rbnode_t* node) {
   assert(!_empty_tree(tree));
   if (_empty_tree(tree)) {
     return false;
   }
 
+  if (NULL == node) {
+      return false;
+  }
   if (true != _free_node(tree, node)) {
     return false;
   }
 
-  //TODO: 保证满足红黑树性质
   return true;
+}
+
+bool rbt_remove(rbtree_t* tree, void* val) {
+  assert(!_empty_tree(tree));
+  if (_empty_tree(tree)) {
+    return false;
+  }
+
+  return rbt_remove2(tree, rbt_find(tree, val));
 }
 
 struct _rbtree_enum_t {
@@ -748,8 +769,7 @@ void rbt_end_enumeration(void* enum_arg) {
   free(enum_arg);
 }
 
-bool rbt_foreach_safe(rbtree_t* tree, bool (*accessor)(const rbnode_t* node, void* arg), void* arg)
-{
+bool rbt_foreach_safe(rbtree_t* tree, bool (*accessor)(const rbnode_t* node, void* arg), void* arg) {
   const rbnode_t* node;
   struct _rbtree_enum_t* rbt_enum = rbt_begin_enumeration(tree);
   if (NULL == rbt_enum) {
@@ -765,4 +785,24 @@ bool rbt_foreach_safe(rbtree_t* tree, bool (*accessor)(const rbnode_t* node, voi
   rbt_end_enumeration(rbt_enum);
 
   return true;
+}
+
+rbnode_t* rbt_find(struct rbtree_t* tree, void* val) {
+    rbnode_t* node = _root(tree);
+
+    while(NULL != node) {
+        const int res = tree->value_cmp(val, node);
+        if (res < 0) {
+            node = _left_child(node);
+        }
+        else if (res == 0) {
+            break;
+        }
+        else {
+            assert(res > 0);
+            node = _right_child(node);
+        }
+    }
+
+    return node;
 }

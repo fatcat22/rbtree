@@ -12,6 +12,10 @@ struct tnode_t* _create_tnode(int num) {
   return tn;
 }
 
+rbnode_t* _alloc_tnode(void* val) {
+    return &(_create_tnode((int)val)->node);
+}
+
 void _free_tnode(rbnode_t* node) {
   assert(node);
   free(container_of(node, struct tnode_t, node));
@@ -29,6 +33,19 @@ int _tnode_compare(const rbnode_t* n1, const rbnode_t* n2) {
   }
   else {
     return 1;
+  }
+}
+
+int _tvalue_compare(void* val, const rbnode_t* node) {
+  const struct tnode_t* tnode = container_of(node, struct tnode_t, node);
+  if ((int)val > tnode->num) {
+      return 1;
+  }
+  else if ((int)val == tnode->num) {
+      return 0;
+  }
+  else {
+      return -1;
   }
 }
 

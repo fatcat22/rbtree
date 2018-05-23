@@ -13,27 +13,16 @@ void setup_rotate_test_tree(void** state) {
             / \   / \
            1R 3R 5R 7R
   */
-  const LargestIntegralType tnodes[] = {
-    (LargestIntegralType)(uintptr_t)_create_tnode(8),
-    (LargestIntegralType)(uintptr_t)_create_tnode(4),
-    (LargestIntegralType)(uintptr_t)_create_tnode(10),
-    (LargestIntegralType)(uintptr_t)_create_tnode(2),
-    (LargestIntegralType)(uintptr_t)_create_tnode(6),
-    (LargestIntegralType)(uintptr_t)_create_tnode(9),
-    (LargestIntegralType)(uintptr_t)_create_tnode(11),
-    (LargestIntegralType)(uintptr_t)_create_tnode(1),
-    (LargestIntegralType)(uintptr_t)_create_tnode(3),
-    (LargestIntegralType)(uintptr_t)_create_tnode(5),
-    (LargestIntegralType)(uintptr_t)_create_tnode(7),
+  const LargestIntegralType node_nums[] = {
+    8, 4, 10, 2, 6, 9, 11, 1, 3, 5, 7,
   };
-  const int tnodes_cnt = countof(tnodes);
   int i;
-  struct rbtree_t* tree = create_rbtree(_tnode_compare, _free_tnode);
+  struct rbtree_t* tree = create_rbtree(_alloc_tnode, _free_tnode, _tnode_compare, _tvalue_compare);
 
   assert_true(NULL != tree);
   assert_true(sizeof(uintptr_t) <= sizeof(LargestIntegralType));
-  for (i = 0; i < tnodes_cnt; i++) {
-    assert_true(rbt_insert(tree, &(((struct tnode_t*)(uintptr_t)tnodes[i])->node)));
+  for (i = 0; i < countof(node_nums); i++) {
+    assert_true(rbt_insert(tree, (void*)(int)node_nums[i]));
   }
 
   *state = tree;

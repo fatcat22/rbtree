@@ -104,7 +104,7 @@ struct rbtree_t* _make_tree(const _node_info_t* node_info, const int node_info_c
   }
 
   assert_true(NULL != root);
-  tree = create_rbtree(_tnode_compare, _free_tnode);
+  tree = create_rbtree(_alloc_tnode, _free_tnode, _tnode_compare, _tvalue_compare);
   assert_true(NULL != tree);
 
   _set_root(tree, root);
@@ -219,7 +219,7 @@ void _test_rbtree_remove(const _node_info_t* node_infos, const int node_infos_cn
 
   for (i = 0; i < rm_nodes_cnt; i++) {
     rbnode_t* rm_node = _get_node_by_num(node_infos, node_infos_cnt, rm_nodes[i]);
-    rbt_remove(test_tree, rm_node);
+    rbt_remove2(test_tree, rm_node);
   }
   remaining = _get_remaining(test_tree);
 
@@ -2417,9 +2417,8 @@ void test_rbtree_remove_root__without_child(void** state) {
   };
   const int rm_num = 1;
   struct rbtree_t* tree = _make_tree(node_infos, countof(node_infos));
-  rbnode_t* rm_node = _get_node_by_num(node_infos, countof(node_infos), rm_num);
 
-  rbt_remove(tree, rm_node);
+  rbt_remove(tree, (void*)rm_num);
 
   assert_true(_empty_tree(tree));
 
@@ -2495,7 +2494,3 @@ void test_rbtree_remove_root__has_all_childs__substitued_by_black(void** state) 
 
   _test_rbtree_remove(node_infos, countof(node_infos), rm_nodes, countof(rm_nodes));
 }
-
-//void test_rbtree_remove_random(void** state) {
-//
-//}
