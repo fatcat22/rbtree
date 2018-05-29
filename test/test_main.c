@@ -103,6 +103,7 @@ void test_rbtree_enumeration_safe_del_last(void** state);
 void test_rbtree_enumeration_safe_del_root(void** state);
 void test_rbtree_enumeration_safe_del_two_leaf(void** state);
 void test_rbtree_enumeration_safe_del_three_fullnode(void** state);
+void test_rbtree_enumeration_start_from_intermediate(void** state);
 
 void test_rbtree_find(void** state);
 
@@ -202,6 +203,7 @@ int main(int argc, char* argv[]) {
     unit_test_setup_teardown(test_rbtree_enumeration_safe_del_root, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
     unit_test_setup_teardown(test_rbtree_enumeration_safe_del_two_leaf, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
     unit_test_setup_teardown(test_rbtree_enumeration_safe_del_three_fullnode, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
+    unit_test_setup_teardown(test_rbtree_enumeration_start_from_intermediate, setup_enumerate_test_rbtree, teardown_enumerate_test_rbtree),
   };
 
   return run_tests(tests);

@@ -42,9 +42,15 @@ bool rbt_insert(struct rbtree_t* tree, void* val);
 /*remove and free a node*/
 bool rbt_remove(struct rbtree_t* tree, void* val);
 bool rbt_remove2(struct rbtree_t* root, rbnode_t* node);
-/*remove safely when enumearte the tree.*/
 
-void* rbt_begin_enumeration(struct rbtree_t* tree);
+/*remove safely when enumearte the tree.
+  if @start_node is NULL, then enumerate from the first node,
+  or else the enumeration start from @start_node(not include @start_node)
+
+  rbt_begin_enumeration2 is a convenient version that you can start from a value.  
+*/
+void* rbt_begin_enumeration(struct rbtree_t* tree, rbnode_t* start_node);
+void* rbt_begin_enumeration2(struct rbtree_t* tree, void* val);
 rbnode_t* rbt_next_node(void*);
 void rbt_end_enumeration(void*);
 

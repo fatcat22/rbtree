@@ -581,7 +581,7 @@ bool _free_node(rbtree_t* tree, rbnode_t* node) {
 
 bool _free_entire_tree(rbtree_t* tree) {
   rbnode_t* node;
-  void* handle = rbt_begin_enumeration(tree);
+  void* handle = rbt_begin_enumeration(tree, NULL);
   if (NULL == handle) {
     return false;
   }
@@ -728,7 +728,7 @@ rbnode_t* _get_next_node(rbnode_t* node) {
   return parent;
 }
 
-void* rbt_begin_enumeration(rbtree_t* tree) {
+void* rbt_begin_enumeration(rbtree_t* tree, rbnode_t* start_node) {
   struct _rbtree_enum_t* rbt_enum;
 
   assert(NULL != tree);
@@ -741,10 +741,30 @@ void* rbt_begin_enumeration(rbtree_t* tree) {
     return rbt_enum;
   }
 
-  rbt_enum->current = __get_tree_minimum(_root(tree));
-  rbt_enum->next = _get_next_node(rbt_enum->current);
+  if (NULL == start_node) {
+    rbt_enum->current = __get_tree_minimum(_root(tree));
+  }
+  else {
+    rbt_enum->current = _get_next_node(start_node);
+  }
+
+  if (NULL == rbt_enum->current) {
+    rbt_enum->next = NULL;
+  }
+  else {
+    rbt_enum->next = _get_next_node(rbt_enum->current);
+  }
 
   return rbt_enum;
+}
+
+void* rbt_begin_enumeration2(struct rbtree_t* tree, void* val) {
+  rbnode_t* start_node = rbt_find(tree, val);
+  if (NULL == start_node) {
+    return NULL;
+  }
+
+  return rbt_begin_enumeration(tree, start_node);
 }
 
 rbnode_t* rbt_next_node(void* enum_arg) {
@@ -770,7 +790,7 @@ void rbt_end_enumeration(void* enum_arg) {
 
 bool rbt_foreach_safe(rbtree_t* tree, bool (*accessor)(const rbnode_t* node, void* arg), void* arg) {
   const rbnode_t* node;
-  struct _rbtree_enum_t* rbt_enum = rbt_begin_enumeration(tree);
+  struct _rbtree_enum_t* rbt_enum = rbt_begin_enumeration(tree, NULL);
   if (NULL == rbt_enum) {
     return false;
   }

@@ -71,7 +71,7 @@ void teardown_enumerate_test_rbtree(void** state) {
 void _test_enumeration_del(_enum_test_t* enum_test, const int* rm_nums, const size_t rm_nums_cnt) {
   int i;
   const rbnode_t* node;
-  void* enum_h = rbt_begin_enumeration(enum_test->test_tree);
+  void* enum_h = rbt_begin_enumeration(enum_test->test_tree, NULL);
 
   assert_true(NULL != enum_h);
   for (i = 0, node = rbt_next_node(enum_h);
@@ -160,4 +160,28 @@ void test_rbtree_enumeration_safe_del_three_fullnode(void** state) {
   int rm_nums[] = {3, 5, 9};
 
   _test_rbtree_enumeration_safe((_enum_test_t*)*state, rm_nums, countof(rm_nums));
+}
+
+void test_rbtree_enumeration_start_from_intermediate(void** state) {
+  int i, j;
+  void* enum_h;
+  tnode_t* tnode;
+  _enum_test_t* enum_test = (_enum_test_t*)*state;
+
+  for (i = 0; i < enum_test->sorted_values_cnt - 1; i++) {
+    enum_h = rbt_begin_enumeration2(enum_test->test_tree, (void*)enum_test->sorted_values[i]);
+
+    assert_true(NULL != enum_h);
+    for (j = i + 1; j < enum_test->sorted_values_cnt; j++) {
+      tnode = container_of(rbt_next_node(enum_h), tnode_t, node);
+      assert_int_equal(enum_test->sorted_values[j], tnode->num);
+    }
+
+    rbt_end_enumeration(enum_h);
+  }
+
+  enum_h = rbt_begin_enumeration2(enum_test->test_tree, (void*)enum_test->sorted_values[enum_test->sorted_values_cnt - 1]);
+  assert_true(NULL != enum_h);
+  assert_true(NULL == rbt_next_node(enum_h));
+  rbt_end_enumeration(enum_h);
 }
